@@ -36,31 +36,11 @@ export default {
   methods: {
     login () {
       this.loading = true
-      this.$store.dispatch('getConsumerKey').then(res => {
+      this.$store.dispatch('getNewConsumerKey').then(res => {
+        console.log('res', res)
         this.loading = false
         this.$localStorage.set('wng.consumerkey', res.consumerKey)
         window.location.href = res.validationUrl
-      })
-    }
-  },
-  mounted () {
-    let consumerKey = this.$localStorage.get('wng.consumerkey')
-    if (typeof consumerKey === 'string') {
-      console.log('consumerKey', consumerKey)
-      this.$store.dispatch('validateAuth', {consumerKey: consumerKey}).then(res => {
-        console.log('this', this)
-        this.$router.push('Dashboard')
-        this.$toast.open({
-          message: 'Connected!',
-          type: 'is-success'
-        })
-      }).catch(err => {
-        console.log('err', err)
-        this.$localStorage.remove('wng.consumerkey')
-        this.$toast.open({
-          message: 'Your credentials are expired!',
-          type: 'is-danger'
-        })
       })
     }
   }
@@ -69,6 +49,10 @@ export default {
 
 <style lang="scss" scoped>
 section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #F2F6FA;
   .background{
     background: url('https://cdn.dribbble.com/users/1049434/screenshots/4469284/illustration_for_lexop.png') 70% top;
     width: 100px;
@@ -82,10 +66,6 @@ section {
   & p.subtitle{
     margin-bottom: 16px;
   }
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #F2F6FA;
   & .box{
     width: 500px;
     height: 250px;

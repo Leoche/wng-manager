@@ -1,15 +1,12 @@
 <template>
   <!--<section class="hero app-navbar is-bold">
     <div class="hero-head">-->
-      <header class="navbar is-bold">
+      <header class="navbar is-fixed-top">
         <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item">
-            <i class="fa fa-cog fa-spin fa-2x fa-fw"></i> Logo
-            <!-- ref: http://fontawesome.io/examples/#animated -->
-          </a>
+          <a class="navbar-item navbar-logo">WNG<span>Manager</span></a>
           <a class="navbar-item is-hidden-desktop" href="https://github.com/ndro/vue-webpack-buefy" target="_blank">
-            <b-icon pack="fa" icon="github" type="is-black"></b-icon>
+            <i class="fe fe-github"></i>
           </a>
           <div class="navbar-burger burger" data-target="navbarDropdown">
             <span></span>
@@ -21,49 +18,29 @@
         <div id="navbarDropdown" class="navbar-menu">
           <div class="navbar-start">
             <a class="navbar-item" href="#">
-              <router-link :to="{ name: 'Home' }">Home</router-link>
+              <!-- <router-link :to="{ name: 'Home' }">Home</router-link> -->
             </a>
-            <div class="navbar-item has-dropdown is-hoverable">
-              <a class="navbar-link" href="#">
-                Menu Hover
-              </a>
-              <div class="navbar-dropdown is-boxed">
-                <a class="navbar-item" href="#">
-                  Item 1
-                </a>
-                <a class="navbar-item" href="#">
-                  Item 2
-                </a>
-                <hr class="navbar-divider">
-                <a class="navbar-item" href="#">
-                  Item after divider
-                </a>
-                <a class="navbar-item is-active" href="#">
-                  Item is-active
-                </a>
-              </div>
-            </div>
           </div>
 
           <div class="navbar-end">
             <!--<div class="navbar-item">-->
               <a class="navbar-item" href="https://github.com/ndro/vue-webpack-buefy" target="_blank">
-                <b-icon pack="fa" icon="github" type="is-black"></b-icon>
+                <span class="fe fe-github"></span>
               </a>
             <!--</div>-->
-            <div class="navbar-item">
-              <div class="field is-grouped">
-                <p class="control">
-                  <a class="button is-primary is-outlined" href="#">
-                    <span>Button</span>
-                  </a>
-                </p>
-                <p class="control">
-                  <a class="button is-primary" href="#">
-                    <b-icon pack="fa" icon="user"></b-icon>
-                    <span>With Icon</span>
-                  </a>
-                </p>
+            <div class="navbar-item has-dropdown is-hoverable is-active">
+              <a class="navbar-link navbar-account" href="#">
+                <avatar :username="user.FIRSTNAME + ' ' + user.LASTNAME" :size="32" :lighten="100"></avatar>
+                <span>{{ user.NICHANDLE }}</span>
+              </a>
+              <div class="navbar-dropdown is-right">
+                <a class="navbar-item" href="#">
+                  Mon compte <i class="fe fe-user"></i>
+                </a>
+                <hr class="navbar-divider">
+                <a class="navbar-item" href="#" @click.prevent="logout">
+                  Déconnexion <i class="fe fe-log-out"></i>
+                </a>
               </div>
             </div>
           </div>
@@ -75,7 +52,22 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import Avatar from 'vue-avatar'
 export default {
+  components: {
+    Avatar
+  },
+  computed: {
+    ...mapGetters({
+      user: 'getUser'
+    })
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch('logout').then(res => this.$localStorage.remove('wng.consumerkey'))
+    }
+  }
 }
 
 /* burger navigation */
@@ -101,7 +93,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <style lang="scss" scoped>
 .navbar {
-  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 5px 35px rgba(0,0,0,.1);
+  & .navbar-logo{
+    font-family: 'Arvo', sans-serif;
+    font-weight: 700;
+    & span{
+      font-weight: 400;
+    }
+  }
+  & .navbar-account {
+    display: flex;
+    align-items: center;
+    & span{
+      padding-left: 8px;
+    }
+  }
+  & .navbar-item{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  & .navbar-dropdown{
+    border-top: 0;
+    & .navbar-item {
+      padding-right: 1rem;
+      font-size: 16px;
+    }
+  }
+  & .navbar-divider{
+    height: 1px;
+  }
 }
 </style>
 
